@@ -47,10 +47,10 @@ module.exports.getAndUpdateCase = async (req, res) => {
         const caseJson = await caseResponse.json();
 
         let updateBody = {}
-        if(caseJson.Subject == 'Test'){
+        if(caseJson.Subject.toLowerCase() == 'test'){
             updateBody = {"Subject" : "Test01"}
         }
-        else if(caseJson.Subject = 'Test01'){
+        else if(caseJson.Subject.toLowerCase() = 'test01'){
             updateBody = {"Subject" : "Test"}
         }
         else{
@@ -66,7 +66,7 @@ module.exports.getAndUpdateCase = async (req, res) => {
                 'Authorization' : 'Bearer ' + accessToken
             }
         }
-        
+
         const updateCaseResponse = await fetch(patchUrl, patchOptions);
         if(updateCaseResponse.status && updateCaseResponse.status == 204)
             res.status(200).json({'message' : 'Case Subject has been updated to: ' + updateBody.Subject})
