@@ -1,0 +1,290 @@
+{
+    "swagger": "2.0",
+    "info": {
+    "version": "0.0.1",
+        "title": "omnomnom",
+        "description": "API to store your recently visited bars/restaurants/etc",
+        "license": {
+        "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+    }
+},
+    "host": "localhost:3000",
+    "basePath": "/api",
+    "tags": [
+    {
+        "name": "Users",
+        "description": "API for user"
+    },
+      {
+        "name": "Locations",
+        "description": "API for location storage"
+      },
+      {
+        "name":"User Locations",
+        "description" : "API for associating users to locations"
+      }
+
+],
+    "schemes": [
+    "http"
+],
+    "consumes": [
+    "application/json"
+],
+    "produces": [
+    "application/json"
+],
+    "paths": {
+    "/users": {
+        "post": {
+            "tags": [
+                "Users"
+            ],
+                "description": "Create new user in system",
+                "summary": "Create a new user in the system using the auth0 ID as our system ID",
+                "parameters": [
+                  {
+                    "name": "userID",
+                    "in": "body",
+                    "required" : true,
+                    "description": "The Auth0 ID which will be used out the identifier in our platform as well"  
+                }
+            ],
+                "produces": [
+                "application/json"
+            ],
+                "responses": {
+                "200": {
+                    "description": "New user is created",
+                        "schema": {
+                        "$ref": "#/definitions/User"
+                    }
+                }
+            }
+        }
+    },
+    "/users?userID={userID}&returnUserLocations={returnUserLocations}": {
+      "parameters": [
+        {
+          "name": "userID",
+          "in": "Query string",
+          "required": true,
+          "description": "ID of user that we want to find",
+          "type": "string"
+        },{
+          "name": "returnUserLocations",
+          "in": "Query string",
+          "required": true,
+          "description": "If true will return the fully populated user visits if false will return an array of ID references to user visits",
+          "type": "boolean"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get user with given ID",
+        "responses": {
+          "200": {
+            "description": "User is found",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+      "/userlocations": {
+        "get": {
+          "tags": [
+            "User Locations"
+          ],
+          "description": "Get all users locations",
+          "parameters": [
+            {
+              "name": "userID",
+              "in": "query",
+              "required" : true,
+              "description": "The ID of the user who you want to pull data from"
+            }
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "An array of user locations a user has visited",
+              "schema": {
+                "$ref": "#/definitions/LocationVisit"
+              }
+            }
+          }
+        },"post": {
+          "tags": [
+            "User Locations"
+          ],
+          "description": "Associate a location to a user",
+          "parameters": [
+            {
+              "name": "location",
+              "in": "body",
+              "required" : true,
+              "description": "The google places data for locations",
+              "schema": {
+                "$ref": "#/definitions/Location"
+              }
+            },
+            {
+              "name": "userID",
+              "in": "body",
+              "required" : true,
+              "description": "userID to associate the location visit to",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "New location is associated",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          }
+        },
+        "put": {
+          "tags": [
+            "User Locations"
+          ],
+          "description": "Update an existing users location",
+          "parameters": [
+            {
+              "name": "locationVisitID",
+              "in": "body",
+              "required" : true,
+              "description": "locationVisitID to be updated",
+              "schema": {
+                "$ref": "#/definitions/LocationVisit"
+              }
+            },
+            {
+              "name": "userID",
+              "in": "body",
+              "required" : true,
+              "description": "userID to associate tp",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            },
+            {
+              "name": "wouldRevisit",
+              "in": "body",
+              "required" : true,
+              "description": "Boolean used to determine if this user would revisit this location",
+              "schema": {
+                "$ref": "#/definitions/LocationVisit"
+              }
+            }
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "Location has been updated",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "definitions": {
+    "User": {
+        "required": [
+            "_id"
+        ],
+            "properties": {
+            "_id": {
+                "type": "string",
+                    "uniqueItems": true
+            },
+            "visitedLocations": {
+                "type": "array",
+                "$ref" : "#/definitions/Locations",
+                "uniqueItems" : true
+            },
+            "fullName": {
+                "type": "string"
+            },
+              "createdOn":{
+                "type" : "string",
+                "format": "date"
+              }
+        }
+    },
+      "Location": {
+        "required": [
+          "_id", "googlePlaceID"
+        ],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date"
+          },
+          "state" : {
+            "type" : "string"
+          },
+          "address" :{
+            "type" :"string"
+          },
+          "googlePlaceID": {
+            "type" : "string",
+            "uniqueItems" : true
+          }
+        }
+      },
+      "LocationVisit": {
+        "required": [
+            "_id", "locationID"
+        ],
+            "properties": {
+            "_id": {
+                "type": "string",
+                    "uniqueItems": true
+            },
+            "locationID": {
+                "type": "string",
+                "$ref" : "#/definitions/Locations"
+            },
+            "wouldRevisit": {
+                "type": "boolean"
+            },
+            "dateOfVisit": {
+              "type": "date"
+          },
+              "createdOn":{
+                "type" : "string",
+                "format": "date"
+              }
+        }
+    }
+}
+}
