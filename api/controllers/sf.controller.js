@@ -105,3 +105,15 @@ module.exports.dedup =  async (req, res) => {
        res.status(400).json(err)
     }
 }
+
+module.exports.fraudCheck =  async (req, res) => {
+    try {
+       
+       return res.status(200).json({
+            fraudCheck : Math.random() >= 0.5
+        })    
+        
+    } catch (err) {
+       res.status(400).json(err)
+    }
+}

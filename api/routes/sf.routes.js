@@ -18,4 +18,8 @@ router
     .route('/dedup')
     .get(sfCtr.dedup)
 
+router
+    .route('/fraudcheck')
+    .get(sfCtr.fraudCheck)
+
 module.exports = router;
