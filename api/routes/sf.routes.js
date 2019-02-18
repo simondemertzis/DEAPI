@@ -14,4 +14,8 @@ router
     .route('/caseupdate')
     .put(sfCtr.getAndUpdateCase)
 
+router
+    .route('/dedup')
+    .get(sfCtr.dedup)
+
 module.exports = router;

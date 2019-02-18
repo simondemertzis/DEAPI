@@ -10,9 +10,7 @@ module.exports.loginStandard = async (req, res) => {
         requestData.grant_type = 'password'
             
         const accessData = await fetchSfAccessToken(requestData)
-        console.log(accessData)
         return res.status(200).json(accessData)
-
     } catch (err) {
         res.status(400).json(err)
     }
@@ -92,5 +90,18 @@ async function fetchSfAccessToken(requestData) {
         return accessResponse.json();
     } catch (err) {
         return (err)
+    }
+}
+
+module.exports.dedup =  async (req, res) => {
+    try {
+       
+       return res.status(200).json({
+            dedupResult : Math.random() >= 0.5
+        })    
+        
+        
+    } catch (err) {
+       res.status(400).json(err)
     }
 }
