@@ -20,56 +20,10 @@ module.exports.loginStandard = async (req, res) => {
 
 module.exports.getAndUpdateCase = async (req, res) => {
     try {
-        let accessToken
-        if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer')
-            accessToken = req.headers.authorization.split(' ')[1];
-        else
-            res.status(400).json({
-                'message': 'No access token passed or credentials were passed'
-            })
-
-
-        const instance = 'https://na85.salesforce.com'
-        const apiPath = '/services/data/v42.0/sobjects/'
-        const object = 'Case/'
-        const objectID = req.body.objectID || '5001U000004ZfOiQAK'
-        const getUrl = instance+apiPath+object+objectID;
-        const getOptions = {
-            method: 'get',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization' : 'Bearer ' + accessToken
-            }
-        }
-        const caseResponse = await fetch(getUrl, getOptions);
-        const caseJson = await caseResponse.json();
-
-        let updateBody = {}
-        if(caseJson.Subject.toLowerCase() == 'test'){
-            updateBody = {"Subject" : "Test01"}
-        }
-        else if(caseJson.Subject.toLowerCase() = 'test01'){
-            updateBody = {"Subject" : "Test"}
-        }
-        else{
-            return res.status(200).json({'message' : 'No matching subject line found, current case subject line =' + caseJson.Subject || 'No Subject'})
-        }
-
-        const patchUrl = instance+apiPath+object+objectID;
-        const patchOptions = {
-            method: 'patch',
-            body: JSON.stringify(updateBody),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization' : 'Bearer ' + accessToken
-            }
-        }
-
-        const updateCaseResponse = await fetch(patchUrl, patchOptions);
-        if(updateCaseResponse.status && updateCaseResponse.status == 204)
-            res.status(200).json({'message' : 'Case Subject has been updated to: ' + updateBody.Subject})
-        else
-            res.status(400).json({'message' : 'Error in patch request to SF'})
+        const dataToReturn = req.body || {}
+        const invoiceNumber = dataToReturn.invoiceNumber || "";
+        
+            res.status(200).json({'message' : 'The System Has Updated Invoice#: ' + invoiceNumber, invoiceUpdated:true})
         
     } catch (err) {
         res.status(400).json(err);
