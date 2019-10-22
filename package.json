@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "app-root-path": "^2.0.1",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "bluebird": "^3.5.1",
     "body-parser": "~1.18.2",
     "boolean-parser": "0.0.2",
