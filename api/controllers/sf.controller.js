@@ -22,13 +22,21 @@ module.exports.getAndUpdateCase = async (req, res) => {
     try {
         const dataToReturn = req.body || {}
         const invoiceNumber = dataToReturn.invoiceNumber || "";
+        const transactionCode = uuidv4()
         
-            res.status(200).json({'message' : 'The System Has Updated Invoice#: ' + invoiceNumber, invoiceUpdated:true})
+            res.status(200).json({'message' : 'The System Has Updated Invoice#: ' + invoiceNumber, invoiceUpdated:true, caseId : transactionCode})
         
     } catch (err) {
         res.status(400).json(err);
     }
 }
+
+function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
 
 async function fetchSfAccessToken(requestData) {
     try {
